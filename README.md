@@ -19,33 +19,6 @@ This repo contains a single-host cloud-init user data file for standing up a Kub
    kubectl get pods -A
    ```
 
-## Diagram
-
-```mermaid
-flowchart TD
-   A[EC2 instance boot] --> B[cloud-init runs user data]
-   B --> C[Write /usr/local/bin/kubeadm-single-node.sh]
-   C --> D[Run kubeadm-single-node.sh]
-
-   D --> E[Install deps: curl, jq, gnupg]
-   D --> F[Disable swap and set sysctl]
-   F --> G[Enable kernel modules: overlay, br_netfilter]
-
-   D --> H[Install containerd]
-   H --> I[Configure SystemdCgroup]
-   I --> J[Enable and start containerd]
-
-   D --> K[Add Kubernetes repo]
-   K --> L[Install kubelet, kubeadm, kubectl]
-   L --> M[Enable kubelet]
-
-   D --> N[kubeadm init --pod-network-cidr=192.168.0.0/16]
-   N --> O[Configure kubectl for ubuntu and root]
-   O --> P[Allow control-plane scheduling]
-   P --> Q[Apply Calico manifest]
-   Q --> R[Cluster ready]
-```
-
 ## Notes
 
 - The pod CIDR is set to 192.168.0.0/16 to match Calico defaults.
